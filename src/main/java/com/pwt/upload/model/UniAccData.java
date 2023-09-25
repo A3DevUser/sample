@@ -1,0 +1,429 @@
+package com.pwt.upload.model;
+
+import java.sql.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "AAA_UNI_ACC")
+public class UniAccData {
+
+	@Id
+	@Column (name = "ACCOUNT_NUMBER")
+    private String id;
+	
+	@Column (name = "CREATED_BY")
+	private int createdBy ;
+	
+	@Column (name = "CREATION_DATE")
+	private Date creationDate;
+	
+	@Column (name = "LAST_UPDATED_BY")
+	private int lastUpdatedBy;
+	
+	@Column (name = "LAST_UPDATE_DATE")
+	private Date lastUpdatedDate;
+	
+	@Column (name = "NAME")
+	private String customerName;
+	
+	@Column (name = "SANCTION_DATE")
+	private String sanctionDate;
+	
+	@Column (name = "LIMIT")
+	private String limit;
+	
+	@Column (name = "OUTSTANDING_BALANCE")
+	private String outstandingBalance;
+	
+	@Column (name = "OVERDUES")
+	private String overdues;
+	
+	@Column (name = "OVERDUES_SINCE")
+	private String overduesSince;
+	
+	@Column (name = "SCHEME_CODE")
+	private String schemeCode;
+	
+	@Column (name = "ROI")
+	private String roi;
+	
+	@Column (name = "STOCK_STMT_DATE")
+	private String stockStmtDate;
+	
+	@Column (name = "ASSET_CLASS")
+	private String assetClass;
+	
+	@Column (name = "INTERNAL_RATING")
+	private String internalRating;
+	
+	@Column (name = "INTERNAL_RATING_DATE")
+	private String internalRatingDate;
+	
+	@Column (name = "EXTERNAL_RATING")
+	private String externalRating;
+	
+	@Column (name = "EXTERNAL_RATING_DATE")
+	private String externalRatingDate;
+	
+	@Column (name = "LAD_DATE")
+	private String ladDate;
+	
+	@Column (name = "LIMIT_REVIEW_DATE")
+	private String limitReviewDate;
+	
+	@Column (name = "LIMIT_REVIEW_EXPIRY_DATE")
+	private String LimitReviewExpiryDate;
+	
+	@Column (name = "DESCRIPTION_OF_ACTIVITY")
+	private String descriptionOfActivity;
+	
+	@Column (name = "CREDIT_TURNOVER")
+	private String creditTurnover;
+	
+	@Column (name = "ZONE")
+	private String zone;
+	
+	@Column (name = "REGION")
+	private String region;
+	
+	@Column (name = "SOL_ID")
+	private String solId;
+	
+	@Column (name = "BRANCH_NAME")
+	private String branchName;
+	
+	@Column (name = "CUSTOMER_ID")
+	private String customerId;
+	
+	@Column (name = "ACCOUNT_OPEN_DATE")
+	private String accountOpenDate;
+
+	@Column (name = "USERID")
+	private String userId;
+	
+	@Column (name = "DUMMY")
+	private String dummy;
+	
+	@Column(name = "MANDATORY")
+	private String mandatory;
+
+	public String getMandatory() {
+		return mandatory;
+	}
+
+	public void setMandatory(String mandatory) {
+		this.mandatory = mandatory;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public int getLastUpdatedBy() {
+		return lastUpdatedBy;
+	}
+
+	public void setLastUpdatedBy(int lastUpdatedBy) {
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
+
+	public Date getLastUpdatedDate() {
+		return lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getSanctionDate() {
+		return sanctionDate;
+	}
+
+	public void setSanctionDate(String sanctionDate) {
+		this.sanctionDate = sanctionDate;
+	}
+
+	public String getLimit() {
+		return limit;
+	}
+
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+
+	public String getOutstandingBalance() {
+		return outstandingBalance;
+	}
+
+	public void setOutstandingBalance(String outstandingBalance) {
+		this.outstandingBalance = outstandingBalance;
+	}
+
+	public String getOverdues() {
+		return overdues;
+	}
+
+	public void setOverdues(String overdues) {
+		this.overdues = overdues;
+	}
+
+	public String getOverduesSince() {
+		return overduesSince;
+	}
+
+	public void setOverduesSince(String overduesSince) {
+		this.overduesSince = overduesSince;
+	}
+
+	public String getSchemeCode() {
+		return schemeCode;
+	}
+
+	public void setSchemeCode(String schemeCode) {
+		this.schemeCode = schemeCode;
+	}
+
+	public String getRoi() {
+		return roi;
+	}
+
+	public void setRoi(String roi) {
+		this.roi = roi;
+	}
+
+	public String getStockStmtDate() {
+		return stockStmtDate;
+	}
+
+	public void setStockStmtDate(String stockStmtDate) {
+		this.stockStmtDate = stockStmtDate;
+	}
+
+	public String getAssetClass() {
+		return assetClass;
+	}
+
+	public void setAssetClass(String assetClass) {
+		this.assetClass = assetClass;
+	}
+
+	public String getInternalRating() {
+		return internalRating;
+	}
+
+	public void setInternalRating(String internalRating) {
+		this.internalRating = internalRating;
+	}
+
+	public String getInternalRatingDate() {
+		return internalRatingDate;
+	}
+
+	public void setInternalRatingDate(String internalRatingDate) {
+		this.internalRatingDate = internalRatingDate;
+	}
+
+	public String getExternalRating() {
+		return externalRating;
+	}
+
+	public void setExternalRating(String externalRating) {
+		this.externalRating = externalRating;
+	}
+
+	public String getExternalRatingDate() {
+		return externalRatingDate;
+	}
+
+	public void setExternalRatingDate(String externalRatingDate) {
+		this.externalRatingDate = externalRatingDate;
+	}
+
+	public String getLadDate() {
+		return ladDate;
+	}
+
+	public void setLadDate(String ladDate) {
+		this.ladDate = ladDate;
+	}
+
+	public String getLimitReviewDate() {
+		return limitReviewDate;
+	}
+
+	public void setLimitReviewDate(String limitReviewDate) {
+		this.limitReviewDate = limitReviewDate;
+	}
+
+	public String getLimitReviewExpiryDate() {
+		return LimitReviewExpiryDate;
+	}
+
+	public void setLimitReviewExpiryDate(String limitReviewExpiryDate) {
+		LimitReviewExpiryDate = limitReviewExpiryDate;
+	}
+
+	public String getDescriptionOfActivity() {
+		return descriptionOfActivity;
+	}
+
+	public void setDescriptionOfActivity(String descriptionOfActivity) {
+		this.descriptionOfActivity = descriptionOfActivity;
+	}
+
+	public String getCreditTurnover() {
+		return creditTurnover;
+	}
+
+	public void setCreditTurnover(String creditTurnover) {
+		this.creditTurnover = creditTurnover;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getSolId() {
+		return solId;
+	}
+
+	public void setSolId(String solId) {
+		this.solId = solId;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getAccountOpenDate() {
+		return accountOpenDate;
+	}
+
+	public void setAccountOpenDate(String accountOpenDate) {
+		this.accountOpenDate = accountOpenDate;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getDummy() {
+		return dummy;
+	}
+
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
+	}
+
+	
+
+	public UniAccData(String id, int createdBy, Date creationDate, int lastUpdatedBy, Date lastUpdatedDate,
+			String customerName, String sanctionDate, String limit, String outstandingBalance, String overdues,
+			String overduesSince, String schemeCode, String roi, String stockStmtDate, String assetClass,
+			String internalRating, String internalRatingDate, String externalRating, String externalRatingDate,
+			String ladDate, String limitReviewDate, String limitReviewExpiryDate, String descriptionOfActivity,
+			String creditTurnover, String zone, String region, String solId, String branchName, String customerId,
+			String accountOpenDate, String userId, String dummy, String mandatory) {
+		super();
+		this.id = id;
+		this.createdBy = createdBy;
+		this.creationDate = creationDate;
+		this.lastUpdatedBy = lastUpdatedBy;
+		this.lastUpdatedDate = lastUpdatedDate;
+		this.customerName = customerName;
+		this.sanctionDate = sanctionDate;
+		this.limit = limit;
+		this.outstandingBalance = outstandingBalance;
+		this.overdues = overdues;
+		this.overduesSince = overduesSince;
+		this.schemeCode = schemeCode;
+		this.roi = roi;
+		this.stockStmtDate = stockStmtDate;
+		this.assetClass = assetClass;
+		this.internalRating = internalRating;
+		this.internalRatingDate = internalRatingDate;
+		this.externalRating = externalRating;
+		this.externalRatingDate = externalRatingDate;
+		this.ladDate = ladDate;
+		this.limitReviewDate = limitReviewDate;
+		LimitReviewExpiryDate = limitReviewExpiryDate;
+		this.descriptionOfActivity = descriptionOfActivity;
+		this.creditTurnover = creditTurnover;
+		this.zone = zone;
+		this.region = region;
+		this.solId = solId;
+		this.branchName = branchName;
+		this.customerId = customerId;
+		this.accountOpenDate = accountOpenDate;
+		this.userId = userId;
+		this.dummy = dummy;
+		this.mandatory = mandatory;
+	}
+
+	public UniAccData() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+}

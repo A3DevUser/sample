@@ -1,0 +1,15 @@
+    {
+       inputFields&&inputFields.map((inputField,index)=>{
+            return(
+                <div key={index}>
+                    {
+                        Object.keys(inputFields[0]).map((res)=>{
+                            return <div style={{display:'inline-block'}}>
+                                <input type="text" name={`${res}`} />
+                            </div>
+                        })
+                    }
+                </div>
+            )
+        })
+    }

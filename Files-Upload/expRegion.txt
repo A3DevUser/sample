@@ -1,0 +1,2054 @@
+create or replace NONEDITIONABLE PACKAGE BODY MS_BOB_EXP_REGION_RPT_PKG AS
+
+  FUNCTION MS_BOB_EXP_REGION_FN (P_AUD_ID VARCHAR2,
+P_PRV_AUD_ID VARCHAR2,
+P_PRE_PREV_AUD_ID VARCHAR2,
+p_SOL_ID VARCHAR2,
+P_ORG_ID VARCHAR2)
+       
+       RETURN CLOB AS 
+
+lv_sq VARCHAR2(100):= CHR(39);
+OBJ_1 CLOB;
+
+DRT_1 CLOB;
+DRT_2 CLOB;
+DRT_2_1 clob;
+DRT_2_2 clob;
+DRT_3 CLOB;
+lv_no_of_branches_1 number := 0;
+lv_no_of_branches_2 number := 0;
+lv_no_of_branches_3 number := 0;
+lv_DCR_AMT_PAID number;
+
+DRT_4 CLOB;
+DRT_4_1 CLOB;
+DRT_5 CLOB;
+
+
+DRT_6 CLOB;
+DRT_6_1 CLOB;
+DRT_6_2 CLOB;
+
+DRT_BS NUMBER;
+DRT_UTIL NUMBER;
+DRT_VARI NUMBER;
+DRT_PER_UTIL NUMBER;
+PS_DRT_BS NUMBER;
+PS_DRT_PER_UTIL NUMBER;
+
+DRT_BS_2 NUMBER;
+DRT_UTIL_2 NUMBER;
+DRT_VARI_2 NUMBER;
+DRT_PER_UTIL_2 NUMBER;
+PS_DRT_BS_2 NUMBER;
+PS_DRT_PER_UTIL_2 NUMBER;
+
+DRT_7 CLOB ;
+DRT_8 CLOB;
+
+DRT_8_1 CLOB;
+
+DRT_9 CLOB;
+DRT_9_1 CLOB;
+DRT_10 CLOB;
+DRT_10_1 CLOB;
+DRT_11 CLOB;
+DRT_12 CLOB;
+DRT_13 CLOB;
+DRT_12_1 CLOB;
+DRT_013 CLOB;
+DRT_14 CLOB;
+DRT_14_1 CLOB;
+DRT_15 CLOB;
+DRT_16 CLOB;
+DRT_16_1 CLOB;
+DRT_17 CLOB;
+DRT_18 CLOB;
+DRT_18_1 CLOB;
+
+DRT_19 CLOB;
+DRT_20 CLOB;
+DRT_20_1 CLOB;
+DRT_21 CLOB;
+DRT_22 CLOB;
+DRT_22_1 CLOB;
+DRT_23 CLOB;
+DRT_24 CLOB;
+DRT_24_1 CLOB;
+DRT_25 CLOB;
+DRT_26 CLOB;
+DRT_026 CLOB;
+lv_DOZ_AMOUNT_SANCTIONED number;
+DRT_26_1 CLOB;
+DRT_27 CLOB;
+lv_observations_details_zr varchar2(400);
+DRT_28 CLOB;
+DRT_28_1 CLOB;
+DRT_29 CLOB;
+lv_observations_comparison varchar2(400);
+DRT_30 CLOB;
+DRT_30_1 CLOB;
+DRT_31 CLOB;
+LV_observation_random_pl varchar2(400);
+
+
+TOT_1 NUMBER;
+TOT_2 NUMBER;
+TOT_3 NUMBER;
+TOT_4 NUMBER;
+TOT_5 NUMBER;
+
+OJR VARCHAR2(4000 byte):= null;
+oto varchar2(4000 byte):= null;
+
+lv_brn_nme varchar2(1000);
+lv_region varchar2(1000);
+lv_zon varchar2(1000);
+lv_f_end_date varchar2(1000);
+
+lv_st1 clob;
+lv_st2 clob;
+lv_st3 clob;
+lv_st4 clob;
+lv_ADDRESS varchar2(400);
+lv_PHONE varchar2(400);
+lv_EMAIL varchar2(400);
+lv_dateofopening date;
+Lv_Date1 Date;
+Lv_From Date;
+lv_to date;
+Lv_Lead_Auditor varchar2(100);
+team_lead varchar2(100);
+prev_team_lead varchar2(100);
+prev_prev_team_lead varchar2(100);
+lv_f_data clob;
+LV_email_sme VARCHAR2(100);
+LV_area_of_coverage VARCHAR2(100); 
+LV_phone_no VARCHAR2(100);
+LV_address_of_sme VARCHAR2(100);
+LV_date_of_opening DATE;
+lv_attached_branch_office VARCHAR2(100);
+lv_PREV_PREV_Audit_start varchar2(1000);
+lv_PREV_Audit_start varchar2(1000);
+lv_audit_start varchar2(1000);
+lv_prev_prev_field_completed varchar2(1000);
+lv_prev_field_completed varchar2(1000);
+lv_field_completed varchar2(1000);
+lv_prev_to_prev_lead_auditor varchar(1000);
+Lv_Prev_Lead_Auditor Varchar2(1000);
+Lv_Prev_Prev_Period_From Date;
+Lv_Prev_Prev_Period_To Date;
+Lv_Prev_Period_From Date;
+Lv_Prev_Period_To DATE;
+Lv_Period_From Date;
+lv_period_to DATE;
+lv_prev_prev_km_budgeted_effort varchar2(1000);
+lv_prev_km_budgeted_effort varchar2(1000);
+lv_km_budgeted_effort varchar2(1000);
+lv_prev_to_prev_norm varchar2(1000);
+lv_prev_norm varchar2(1000);
+lv_norm varchar2(1000);
+lv_ce_obs varchar2(4000);
+lv_obs_sb varchar2(4000);
+lv_obs_it_dep varchar2(4000);
+lv_obs_itb varchar2(4000);
+lv_obs_md varchar2(4000);
+Lv_Tl Varchar2(4000);
+Lv_Team_Members  Varchar2(4000);
+Lv_P_Prev_Team_Members Varchar2(4000);
+Lv_P_Team_Members   Varchar2(4000);
+Lv_P_Prev_Id Date;
+Lv_P_Id Date;
+Lv_Id  Date;
+Ln_Dit_Amount Number;
+Lv_St08 Clob;
+lv_regional_head Varchar2(100);
+lv_deputy_head  Varchar2(100);
+PS_ACE_LFY_UTILISED NUMBER;
+lv_year_1 number(7);
+lv_year_2 number(7);
+lv_year_3 number(7);
+lv_curr_bs_tot number(7);
+lv_curr_util_tot number(7);
+lv_comm VARCHAR2(4000);
+lv_sor varchar2(4000);
+lv_aoo VARCHAR2(4000);
+
+lv_amt_1 number(7) := 0;
+lv_amt_2 number(7) := 0;
+lv_amt_3 number(7) := 0;
+LV_PED_COMMENTS VARCHAR2(4000);
+high_PED_PARTICULARS VARCHAR2(4000);
+lv_any_other VARCHAR2(4000);
+
+int_auditor varchar2(250);
+assisted_by  VARCHAR2(100);
+
+BEGIN
+begin
+
+select (select first_name||' '||last_name
+
+     from si_users_t a,ms_aud_audit_tmr b
+
+     where a.user_name =
+
+     b.TMR_USER_NAME and b.tmr_id = c.tmr_id)
+
+     into assisted_by
+
+     from a_ms_bob_audit_tmr c
+
+     where audit_id = p_aud_id and A_TEAM_LEAD_X52 = 'yes';
+
+ 
+
+     select listagg(ms_apps_utilities.get_user_full_name(TMR_USER_NAME),', ' )
+
+     within group(order by TMR_USER_NAME) into int_auditor
+
+     from MS_AUD_AUDIT_TMR where tmr_id in
+
+     (select tmr_id from a_ms_bob_audit_tmr c
+
+     where audit_id = p_aud_id
+
+     and A_TEAM_LEAD_X52 not in ('yes') 
+
+     );
+
+ 
+
+exception
+
+when OTHERS then
+
+assisted_by:=null;
+
+int_auditor:=null;
+
+
+
+end;
+
+
+BEGIN 
+SELECT PED_COMMENTS INTO LV_PED_COMMENTS  FROM MS_BOB_REG_BRANCH_PROF_PED WHERE PED_PARTICULARS ='Structure' AND AUDIT_ID = P_AUD_ID ;
+EXCEPTION        
+WHEN OTHERS THEN
+LV_PED_COMMENTS :='';
+END;
+
+
+BEGIN 
+SELECT PED_COMMENTS into lv_any_other from MS_BOB_REG_BRANCH_PROF_PED where PED_PARTICULARS ='Any Other activities'  AND AUDIT_ID = P_AUD_ID ;
+EXCEPTION        
+WHEN OTHERS THEN
+lv_any_other :='';
+END;
+
+
+BEGIN 
+SELECT PED_COMMENTS into high_PED_PARTICULARS  from MS_BOB_REG_BRANCH_PROF_PED where PED_PARTICULARS ='Highlights'  AND AUDIT_ID =P_AUD_ID ;
+EXCEPTION        
+WHEN OTHERS THEN
+high_PED_PARTICULARS :='';
+END;
+
+
+
+DRT_BS := 0;
+DRT_UTIL  := 0;
+DRT_VARI  := 0;
+DRT_PER_UTIL  := 0;
+PS_DRT_BS := 0;
+PS_DRT_PER_UTIL  := 0;
+
+DRT_BS_2 := 0;
+DRT_UTIL_2  := 0;
+DRT_VARI_2  := 0;
+DRT_PER_UTIL_2  := 0;
+PS_DRT_BS_2 := 0;
+PS_DRT_PER_UTIL_2  := 0;
+
+lv_tl :=   MS_BOB_GET_TEAM_MEMBERS(p_aud_id);
+
+begin
+select 
+(SELECT ORG_ENTITY_NAME FROM SI_ORG_ENTITIES_T WHERE ORG_EnTITY_ID=p_org_id) AS BRANCH,
+(SELECT org_entity_name FROM si_org_entities 
+where Org_Hierarchy_Id IN (select Org_Hierarchy_Id from Si_Org_Hierarchy_Levels_T where Org_Level=4) 
+and Nvl(end_date, SYSDATE) >= SYSDATE 
+CONNECT BY PRIOR parent_org_entity_id =org_entity_id START WITH org_entity_id = p_org_id) AS REGION,
+(SELECT ORG_ENTITY_NAME FROM SI_ORG_ENTITIES_T WHERE ORG_ENTITY_ID=AUD.CONDUCTED_BY_ORG) AS ZONE
+
+into lv_brn_nme,
+     lv_region,
+     lv_zon
+from MS_AUD_AUDIT AUD WHERE AUD.AUDIT_ID =P_AUD_ID;
+EXCEPTION        
+WHEN OTHERS THEN
+lv_brn_nme:='';
+lv_region :='';
+lv_zon :='';
+end;
+
+ begin
+select (select first_name||' '||last_name 
+     from si_users_t a,ms_aud_audit_tmr b 
+     where a.user_name = 
+     b.TMR_USER_NAME and b.tmr_id = c.tmr_id) 
+     into team_lead
+     from a_ms_bob_audit_tmr c 
+     where audit_id = p_aud_id and A_TEAM_LEAD_X52 = 'yes';
+
+     select listagg(ms_apps_utilities.get_user_full_name(TMR_USER_NAME),', ' ) 
+     within group(order by TMR_USER_NAME) into lv_lead_auditor
+     from MS_AUD_AUDIT_TMR where tmr_id in
+     (select tmr_id from a_ms_bob_audit_tmr c
+     where audit_id = p_aud_id
+     and A_TEAM_LEAD_X52 not in ('yes')
+     );
+  
+exception
+when OTHERS then
+team_lead:=null;
+lv_lead_auditor:=null;
+end;
+
+begin
+select (select first_name||' '||last_name 
+     from si_users_t a,ms_aud_audit_tmr b 
+     where a.user_name = 
+     b.TMR_USER_NAME and b.tmr_id = c.tmr_id) 
+     into prev_team_lead
+     from a_ms_bob_audit_tmr c 
+     where audit_id = P_PRV_AUD_ID  and A_TEAM_LEAD_X52 = 'yes';
+
+      select listagg(ms_apps_utilities.get_user_full_name(TMR_USER_NAME),', ' ) 
+     within group(order by TMR_USER_NAME) into lv_prev_lead_auditor
+     from MS_AUD_AUDIT_TMR where tmr_id in
+     (select tmr_id from a_ms_bob_audit_tmr c
+     where audit_id = P_PRV_AUD_ID 
+     and A_TEAM_LEAD_X52 not in ('yes')
+     );
+exception
+when OTHERS then
+prev_team_lead:=null;
+lv_prev_lead_auditor:=null;
+
+end;
+    begin
+     select (select first_name||' '||last_name 
+     from si_users_t a,ms_aud_audit_tmr b 
+     where a.user_name = 
+     b.TMR_USER_NAME and b.tmr_id = c.tmr_id) 
+     into prev_prev_team_lead
+     from a_ms_bob_audit_tmr c 
+     where audit_id = P_PRE_PREV_AUD_ID  and A_TEAM_LEAD_X52 = 'yes';
+
+     select listagg(ms_apps_utilities.get_user_full_name(TMR_USER_NAME),', ' ) 
+     within group(order by TMR_USER_NAME) into lv_prev_to_prev_lead_auditor
+     from MS_AUD_AUDIT_TMR where tmr_id in
+     (select tmr_id from a_ms_bob_audit_tmr c
+     where audit_id = P_PRE_PREV_AUD_ID
+     and A_TEAM_LEAD_X52 not in ('yes')
+     );
+     
+     exception
+when OTHERS then
+prev_prev_team_lead:=null;
+lv_prev_to_prev_lead_auditor:=null;
+
+end;
+BEGIN
+select name into lv_regional_head 
+from si_user_org_roles_v where org_entity_id = (select parent_org_entity_id from si_org_entities_t where org_entity_id = p_org_id)
+and ROLE_NAME = 'Regional Manager';
+EXCEPTION        
+WHEN OTHERS THEN
+lv_regional_head:='';
+End;
+begin
+select name into lv_deputy_head 
+from si_user_org_roles_v where org_entity_id = (select parent_org_entity_id from si_org_entities_t where org_entity_id = p_org_id)
+and ROLE_NAME = 'Deputy Regional Manager';
+EXCEPTION        
+WHEN OTHERS THEN
+lv_deputy_head:='';
+End;
+
+
+begin
+select KM_ACTUAL_DATE INTO lv_f_end_date from ms_aud_audit_kms where audit_id = P_AUD_ID AND KM_MILESTONES = 'Field work Ended';
+EXCEPTION        
+WHEN OTHERS THEN
+lv_f_end_date:='';
+End;
+
+Begin
+
+Select Km_Actual_Date Into Lv_Date1 From Ms_Aud_Audit_Kms Where Km_Milestones='Audit Started' 
+ And Audit_Id=P_Aud_Id;
+ Exception When Others
+ Then
+ Lv_Date1:=Null;
+ end;
+
+begin
+for i in (select KM_ACTUAL_DATE,KM_MILESTONES,audit_id,km_budgeted_effort from ms_aud_audit_kms) loop
+
+if i.KM_MILESTONES ='Audit Started'  and i.audit_id=p_aud_id then
+lv_Audit_start:=i.KM_ACTUAL_DATE;
+lv_km_budgeted_effort:=i.km_budgeted_effort;
+elsif 
+ i.KM_MILESTONES ='Audit Started'  and i.audit_id=P_PRV_AUD_ID then
+ lv_prev_Audit_start:=i.KM_ACTUAL_DATE;
+ lv_prev_km_budgeted_effort:=i.km_budgeted_effort;
+ 
+elsif 
+i.KM_MILESTONES='Audit Started'  and i.audit_id=P_PRE_PREV_AUD_ID then
+ lv_prev_prev_Audit_start:=i.KM_ACTUAL_DATE;
+ lv_prev_prev_km_budgeted_effort:=i.km_budgeted_effort;
+
+elsif
+UPPER(i.KM_MILESTONES) =UPPER('Field work Ended') and  i.audit_id=p_aud_id then
+lv_field_Completed:=i.KM_ACTUAL_DATE;
+elsif
+UPPER(i.KM_MILESTONES)=UPPER('Field work Ended') and  i.audit_id=P_PRV_AUD_ID then
+lv_prev_field_Completed:=i.KM_ACTUAL_DATE;
+elsif
+UPPER(i.KM_MILESTONES)=UPPER('Field work Ended') and  i.audit_id=P_PRE_PREV_AUD_ID then
+Lv_Prev_Prev_Field_Completed:=I.Km_Actual_Date;
+Elsif
+Upper(I.Km_Milestones)=Upper('RC') And  I.Audit_Id=P_Pre_Prev_Aud_Id Then
+Lv_P_Prev_Id:=I.Km_Actual_Date;
+ELSIF
+Upper(I.Km_Milestones)=Upper('RC') And  I.Audit_Id=P_Prv_Aud_Id Then
+Lv_P_Id:=I.Km_Actual_Date;
+ELSIF
+Upper(I.Km_Milestones)=Upper('RC') And  I.Audit_Id=P_Aud_Id Then
+Lv_Id:=I.Km_Actual_Date;
+end if;
+
+end loop;
+exception
+when others then
+null;
+end;
+
+begin
+SELECT OBSERVATIONS_CAPITAL_EXP into lv_ce_obs
+ FROM ms_bob_reg_branch_prof WHERE AUDIT_ID = p_aud_id;
+EXCEPTION        
+WHEN OTHERS THEN
+lv_ce_obs:='';
+end;
+
+begin
+SELECT OBSERVATION_DETAIL_SEC into lv_obs_it_dep
+ FROM ms_bob_reg_branch_prof WHERE AUDIT_ID = p_aud_id;
+ EXCEPTION        
+WHEN OTHERS THEN
+lv_obs_it_dep:='';
+end;
+
+begin
+ select OBSERVATIONS_SECURITY_BUD into lv_obs_sb from ms_bob_reg_branch_prof where audit_id = p_aud_id;
+EXCEPTION        
+WHEN OTHERS THEN
+lv_obs_sb:='';
+end;
+
+begin
+SELECT OBSERVATIONS_DETAIL_ITB INTO lv_obs_itb
+ FROM ms_bob_reg_branch_prof where audit_id = p_aud_id;
+ EXCEPTION WHEN OTHERS THEN
+lv_obs_itb:='';
+end;
+
+begin
+SELECT OBSERVATIONS_MARKETING_DEP into lv_obs_md
+ FROM ms_bob_reg_branch_prof where audit_id = p_aud_id;
+ EXCEPTION WHEN OTHERS THEN
+lv_obs_md:='';
+end;
+
+begin
+    lv_team_members:= MS_BOB_GET_TEAM_MEMBERS(p_aud_id);
+
+exception
+when OTHERS then
+lv_team_members:= null;
+End;
+Begin
+    lv_p_team_members:= MS_BOB_GET_TEAM_MEMBERS(p_prv_aud_id);
+
+exception
+When Others Then
+Lv_p_Team_Members:= Null;
+End;
+Begin
+    lv_p_prev_team_members:= MS_BOB_GET_TEAM_MEMBERS(p_pre_prev_aud_id);
+
+exception
+When Others Then
+Lv_p_prev_Team_Members:= Null;
+End;
+
+ begin
+ 
+ select a_type_of_product_x46 as per_to,a_type_of_branch_x44 as per_from 
+ into lv_period_to, lv_period_from
+ from a_ms_bob_audit where audit_id = p_aud_id;
+ 
+ exception when others then
+ 
+ lv_period_from := '';
+ Lv_Period_To := '';
+ end;
+begin
+ 
+ select a_type_of_product_x46 as per_to,a_type_of_branch_x44 as per_from 
+ into lv_prev_period_to, lv_prev_period_from
+ from a_ms_bob_audit where audit_id = P_PRV_AUD_ID ;
+ 
+ exception when others then
+ 
+ lv_prev_period_from := '';
+ Lv_prev_Period_To := '';
+ end;
+ begin
+ 
+ select a_type_of_product_x46 as per_to,a_type_of_branch_x44 as per_from 
+ into lv_prev_prev_period_to, lv_prev_prev_period_from
+ from a_ms_bob_audit where audit_id = P_PRE_PREV_AUD_ID ;
+ 
+ exception when others then
+ 
+ lv_prev_prev_period_from := '';
+ Lv_prev_prev_Period_To := '';
+ end;
+
+begin
+   SELECT EXTRACT (YEAR FROM A_TOTAL_VALUE_OF_LOAN_X45)-2, EXTRACT (YEAR FROM A_TOTAL_VALUE_OF_LOAN_X45)-1, EXTRACT (YEAR FROM A_TOTAL_VALUE_OF_LOAN_X45) into lv_year_3,lv_year_2, lv_year_1 FROM A_MS_BOB_AUDIT WHERE AUDIT_ID = p_aud_id;
+ exception when others then
+ 
+ lv_year_3 := '';
+ lv_year_2 := '';
+  lv_year_2 := '';
+
+ end;
+ 
+ begin
+ select ZONE_REGION_COMM, ZONE_REGION_STATUS, ZONE_REGION_ANY_OTHER into lv_comm, lv_sor, lv_aoo from ms_bob_reg_branch_prof where audit_id = p_aud_id;
+  exception when others then
+lv_comm :='';
+lv_sor :='';
+lv_aoo :='';
+ end;
+
+lv_st1:='<p style="font-size:15px;font-family:Times New Roman;text-align:center;"><strong>(</strong><strong><span style="font-family:Times new roman;color:black;">गोपनीय/Confidential)</span></strong><br><strong><span style="color:black;"></span> आंतरिक लेखा परीक्षा रिपोर्ट</strong></p>
+<p style="font-size:15px;font-family:Times New Roman;text-align:center;"><strong><span style="color:black;"></span></strong><strong><span style="font-family:Times new roman;color:black;"></span></strong><strong><span style="color:black;">INTERNAL AUDIT REPORT ON EXPENDITURE AUDIT</span></strong><br><strong>(CAPITAL AND REVENUE)</strong></p>';
+lv_st2:='<br><table style="border:none;width:720pt;border-collapse:collapse;">
+    <tbody>
+        <tr>
+            <td style="width:46.86%;border:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">लेखा परीक्षा की तिथि</span></strong><strong><span style="font-family:Times New Roman;color:black;">/ Date of Audit</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-top:1pt solid;border-right:1pt solid;border-bottom:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_date1||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">लेखा अवधि</span></strong><strong><span style="font-family:Times New Roman;color:black;">/ Period of Audit</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-top:1pt solid;border-right:1pt solid;border-bottom:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_period_from ||' - '|| lv_period_to||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">शाखा</span></strong><strong><span style="font-family:Times New Roman;color:black;">/</span></strong><strong><span style="font-family:Times New Roman;color:black;"> Office</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_brn_nme||'</p>
+            </td>
+            <td style="border:none;padding:0cm 0cm 0cm 0cm;">
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">क्षेत्र</span></strong><strong><span style="font-family:Times New Roman;color:black;">Region</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_region||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">अंचल</span></strong><strong><span style="font-family:Times New Roman;color:black;">/ Zone</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_zon||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">आंचलिक आंतरिक लेखा परीक्षा प्रभाग</span></strong><strong><span style="font-family:Times New Roman;color:black;">/ </span></strong></p>
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">Zonal Internal Audit Division</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_zon||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">आंतरिक लेखा परीक्षक का नाम</span></strong><strong><span style="font-family:Times New Roman;color:black;">/</span></strong></p>
+                <p style="font-size:15px;font-family:Times New Roman;"><strong><span style="font-family:Times New Roman;color:black;">Name of the Internal Auditor</span></strong></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style="font-size:15px;font-family:Times New Roman;">'||lv_team_members||'</p>     
+            </td>
+        </tr>      
+    </tbody>
+</table>';
+
+begin
+select ADDRESS,PHONE,EMAIL,dateofopening into lv_ADDRESS,lv_PHONE,lv_EMAIL,lv_dateofopening  from ms_bob_uni_branch_master  where BRANCH_SOL_ID=p_sol_id;
+exception
+when others then
+lv_ADDRESS:=null;
+lv_PHONE:=null;
+lv_EMAIL:=null;
+lv_dateofopening:=null;
+end;
+
+
+lv_st3:=' <p style="page-break-before: always;"></p>
+<p><strong>  Report on Expenditure Audit (Capital and Revenue) of '||lv_brn_nme||' </strong></p>
+<table style="width:720pt;border-collapse:collapse;border:1pt solid;">
+<tbody>
+        <tr>         
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Name of Auditee Unit</span></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_brn_nme||'</p>
+            </td>
+            </tr>
+         <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Address </span></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_ADDRESS||'</p>
+            </td>
+             </tr>
+              <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Phone</span></p>
+            </td>
+          
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_PHONE||'</p>
+            </td>
+             </tr>
+              <tr>
+            <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>E-mail</span></p>
+            </td>
+           
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_EMAIL||'</p>
+            </td>
+             </tr>
+              <tr>
+             <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Date of opening </span></p>
+            </td>
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_dateofopening||'</p>
+            </td>
+             </tr>  
+            <tr>
+             <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Name of the Regional Head</span></p>
+            </td>
+            
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_regional_head||'</p>
+            </td>
+            </tr>
+                        <tr>
+             <td style="width:46.86%;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'></span><span style='||lv_sq||'font-family:Times New Roman;color:black;'||lv_sq||'>Name of Dy. Regional Head</span></p>
+            </td>
+            
+            <td style="width:51.58%;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_deputy_head||'</p>
+            </td>
+            </tr>
+          </tbody>
+          </table>';
+          
+          lv_st4:='<br/><table style="720pt;border-collapse:collapse;border:none;">
+    <tbody>
+        <tr>
+            <td colspan= "4" style="border:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><strong><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>A) Details of Audit :</span></strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p align ="center"> <strong> For Previous to Previous AUDIT </strong></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><strong><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>For Previous Audit</span></strong></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><strong><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>For Present Audit</span></strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>Date of commencement of Audit</span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_PREV_PREV_Audit_start||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_PREV_Audit_start||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_Audit_start||'</span></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>Date of completion of Audit</span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_PREV_PREV_field_Completed||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_PREV_field_Completed||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_field_Completed||'</span></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>Name of Auditor</span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||prev_prev_team_lead||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||prev_team_lead||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||team_lead||'</span></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>Assisted by </span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                    <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_prev_to_prev_lead_auditor||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_prev_lead_auditor||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_lead_auditor||'</span></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>Review Period</span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:left;'||lv_sq||'>'||lv_prev_prev_period_from ||'-'|| lv_PREV_PREV_period_to||'</p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:left;'||lv_sq||'>'||lv_prev_period_from ||'-'|| lv_prev_period_to||'</p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:left;'||lv_sq||'>'||lv_period_from ||'-'|| lv_period_to||'</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>No. of Mandays taken</span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_prev_prev_km_budgeted_effort||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_prev_km_budgeted_effort||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_km_budgeted_effort||'</span></p>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:168.65pt;border-right:1pt solid;border-bottom:1pt solid;border-left:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;color:black;'||lv_sq||'>RC submitted on </span></p>
+            </td>
+            <td style="width:90.65pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_p_prev_id||'</span></p>
+            </td>
+            <td style="width:88pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_p_id||'</span></p>
+            </td>
+            <td style="width:112.7pt;border-bottom:1pt solid;border-right:1pt solid;">
+                <p style='||lv_sq||'font-size:15px;font-family:Times New Roman;text-align:center;'||lv_sq||'><span style='||lv_sq||'font-size:15px;font-family:Times New Roman;'||lv_sq||'>'||lv_id||'</span></p>
+            </td>
+        </tr>
+        
+         
+    </tbody>
+</table> <br>';
+
+
+--DATA TO BE COLLECTED FROM MS_BOB_SME_RPT_PKG
+
+  
+  DRT_1:= '<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="6" valign="top" width="616">
+<strong>A.  No. of branches:</strong>
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="103">
+<p><strong>Area classification</strong></p>
+</td>
+<td valign="top" width="77">
+<p align="center"><strong>No. of branches</strong></p>
+</td>
+<td valign="top" width="129">
+<p><strong>Category</strong></p>
+</td>
+<td valign="top" width="89">
+<p align="center"><strong>No. of branches</strong></p>
+</td>
+<td valign="top" width="117">
+<p align="center"><strong>Specialised Branches</strong></p>
+</td>
+<td valign="top" width="101">
+<p align="center"><strong>No. of branches</strong></p>
+</td>
+</tr>';
+
+for i in (SELECT ANB_AREA_CLASSIFICATION, ANB_NO_BRANCHES, ANB_CATEGORY, ANB_NO_BRANCHESS, ANB_SPECIALISED_BRANCHES, ANB_NO_BRANCHESSS
+          FROM MS_BOB_REG_BRANCH_PROF_ANB WHERE AUDIT_ID = P_AUD_ID ORDER BY ANB_SERIAL_NO) LOOP
+
+
+DRT_2_1:= '<tr>
+<td valign="top" width="103">
+<p align="center">'||CASE WHEN i.ANB_AREA_CLASSIFICATION = 1 THEN 'Metropolitan'
+                          WHEN i.ANB_AREA_CLASSIFICATION = 2 THEN 'Urban'
+                          WHEN i.ANB_AREA_CLASSIFICATION = 3 THEN 'Semi Urban'
+                          WHEN i.ANB_AREA_CLASSIFICATION = 4 THEN 'Rural' 
+                          END||'</p>
+</td>
+<td valign="top" width="77">
+<p align="center">'||i.ANB_NO_BRANCHES||'</p>
+</td>
+<td valign="top" width="129">
+<p align="center">'||CASE WHEN i.ANB_CATEGORY = 1 THEN 'Exceptionally large'
+                          WHEN i.ANB_CATEGORY = 2 THEN 'Very Large'
+                          WHEN i.ANB_CATEGORY = 3 THEN 'Large'
+                          WHEN i.ANB_CATEGORY = 4 THEN 'Medium'
+                          WHEN i.ANB_CATEGORY = 5 THEN 'Small'
+                          END||'</p>
+</td>
+<td valign="top" width="89">
+<p align="center">'||i.ANB_NO_BRANCHESS||'</p>
+</td>
+<td valign="top" width="117">
+<p align="center">'||CASE WHEN i.ANB_SPECIALISED_BRANCHES = 1 THEN 'CFS'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 2 THEN 'SME'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 3 THEN 'IBB'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 4 THEN 'SMS'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 5 THEN 'SAFB'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 6 THEN 'SARB/SAMB'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 7 THEN 'CBO'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 8 THEN 'RBO'
+                          WHEN i.ANB_SPECIALISED_BRANCHES = 9 THEN 'Forex Authorised'
+                          END||'</p>
+</td>
+<td valign="top" width="101">
+<p align="center">'||i.ANB_NO_BRANCHESSS||'</p>
+</td>
+</tr>';
+
+Drt_2:= Drt_2 || Drt_2_1;
+Drt_2_1:=' ';
+
+lv_no_of_branches_1 := lv_no_of_branches_1 + nvl(i.ANB_NO_BRANCHES,0);
+lv_no_of_branches_2 := lv_no_of_branches_2 + nvl(i.ANB_NO_BRANCHESS,0);
+lv_no_of_branches_3 := lv_no_of_branches_3 + nvl(i.ANB_NO_BRANCHESSS,0);
+
+END LOOP;
+
+DRT_2_2 := '<tr>
+<td valign="top" width="103">
+<p align="center"><strong>Total</strong></p>
+</td>
+<td valign="top" width="77">
+<p align="center"><strong>'||lv_no_of_branches_1||'</strong></p>
+</td>
+<td valign="top" width="129">
+<p align="center"><strong></strong></p>
+</td>
+<td valign="top" width="89">
+<p align="center"><strong>'||lv_no_of_branches_2||'</strong></p>
+</td>
+<td valign="top" width="117">
+<p align="center"><strong></strong></p>
+</td>
+<td valign="top" width="101">
+<p align="center"><strong>'||lv_no_of_branches_3||'</strong></p>
+</td>
+</tr>';
+
+DRT_3:= DRT_1 || DRT_2 || DRT_2_2 || '</tbody>
+</table>
+<p><strong>&nbsp;</strong></p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="11" width="100%">
+<strong>B. Total Staff Strength</strong>
+</td>
+</tr>
+<tr>
+<td width="11%">
+<p align="center">Scale-wise</p>
+</td>
+<td width="10%">
+<p align="center">Branches</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">RO</p>
+</td>
+<td width="8%">
+<p align="center">ZO</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">CBO</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">RLF/ SMS</p>
+</td>
+<td valign="top" width="9%">
+<p align="center">SMELF</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">CFS</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">RBO</p>
+</td>
+<td valign="top" width="8%">
+<p align="center">Others</p>
+</td>
+<td valign="top" width="12%">
+<p align="center"><strong>Total</strong></p>
+</td>
+</tr>';
+
+for i in (SELECT TSS_SCALE_WISE, TSS_BRANCHES, TSS_RO, TSS_ZO, TSS_CBO, TSS_RLF_SMS, TSS_SMELF, TSS_CFS, TSS_RBO, TSS_OTHERS, TSS_TOTAL 
+          FROM MS_BOB_REG_BRANCH_PROF_TSS WHERE AUDIT_ID = P_AUD_ID ORDER BY TSS_SERIAL_NO) LOOP
+
+if (i.TSS_SCALE_WISE = 'Total')then
+DRT_4_1:= '<tr>
+<td width="11%">
+<p>&nbsp;<strong>'||i.TSS_SCALE_WISE||'</strong></p>
+</td>
+<td valign="top" width="10%">
+<p>&nbsp;'||i.TSS_BRANCHES||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_ZO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_CBO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RLF_SMS||'</p>
+</td>
+<td valign="top" width="9%">
+<p>&nbsp;'||i.TSS_SMELF||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_CFS||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RBO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_OTHERS||'</p>
+</td>
+<td valign="top" width="12%">
+<p>&nbsp;'||i.TSS_TOTAL||'</p>
+</td>
+</tr>';
+
+else
+
+DRT_4_1:= '<tr>
+<td width="11%">
+<p>&nbsp;'||i.TSS_SCALE_WISE||'</p>
+</td>
+<td valign="top" width="10%">
+<p>&nbsp;'||i.TSS_BRANCHES||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_ZO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_CBO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RLF_SMS||'</p>
+</td>
+<td valign="top" width="9%">
+<p>&nbsp;'||i.TSS_SMELF||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_CFS||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_RBO||'</p>
+</td>
+<td valign="top" width="8%">
+<p>&nbsp;'||i.TSS_OTHERS||'</p>
+</td>
+<td valign="top" width="12%">
+<p>&nbsp;'||i.TSS_TOTAL||'</p>
+</td>
+</tr>';
+end if;
+
+Drt_4:= Drt_4 || Drt_4_1;
+Drt_4_1:=' ';
+
+
+END LOOP;
+  
+DRT_5:= DRT_3 || DRT_4 || '</tbody>
+</table>
+<p align="right"><strong>(Amount Rs.in lakhs)</strong></p>
+
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="8" valign="top" width="100%">
+<strong>C. Capital Expenditure</strong>
+
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td rowspan="2" valign="top" width="7%">
+<p>Sr. No.</p>
+</td>
+<td rowspan="2" width="24%">
+<p align="center">Particulars</p>
+</td>
+<td colspan="4" valign="top" width="42%">
+
+<p align="center">'||lv_year_3||'-'||lv_year_2||'</p>
+</td>
+<td colspan="2" valign="top" width="25%">
+
+<p align="center">'||lv_year_2||'-'||lv_year_1||'</p>
+<p align="center">&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="12%">
+<p align="center">Budget Sanctioned</p>
+</td>
+<td width="10%">
+<p align="center">Utilisation</p>
+</td>
+<td width="10%">
+<p align="center">Variance</p>
+</td>
+<td width="9%">
+<p align="center">% utilised</p>
+</td>
+<td width="12%">
+<p align="center">Budget Sanctioned</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">Utilization upto Sept/ Mar -20__</p>
+</td>
+</tr>';
+
+
+FOR M IN (SELECT case when a.ACE_SR_NO = 1 then 1
+            when a.ACE_SR_NO = 2 then null
+            when a.ACE_SR_NO = 3 then null
+            when a.ACE_SR_NO = 4 then 2
+            when a.ACE_SR_NO = 5 then 3
+            when a.ACE_SR_NO = 6 then null
+            when a.ACE_SR_NO = 7 then null
+            when a.ACE_SR_NO = 8 then 4
+            when a.ACE_SR_NO = 9 then 5
+            when a.ACE_SR_NO = 10 then 6
+            when a.ACE_SR_NO = 11 then 7
+            else a.ACE_SR_NO
+          end as  ACE_SR_NO,ACE_PARTICULARS,ACE_LFY_BUDGET,ace_lfy_utilisation,ACE_LFY_VARIANCE,ACE_LFY_UTILISED,
+(select ACE_LFY_BUDGET from MS_BOB_REG_BRANCH_PROF_ACE where AUDIT_ID=P_aud_id and ACE_SR_NO=a.ACE_SR_NO) as ps_ACE_LFY_BUDGET,
+(select ace_lfy_utilisation from MS_BOB_REG_BRANCH_PROF_ACE where AUDIT_ID=P_aud_id and ACE_SR_NO=a.ACE_SR_NO) as ps_ace_lfy_utilisation
+from MS_BOB_REG_BRANCH_PROF_ACE a where AUDIT_ID=P_PRV_AUD_ID and ACE_SR_NO between 1 and 11) LOOP
+
+
+
+DRT_6_1 := '<tr>
+<td valign="top" width="7%">
+<p><strong>'||M.ACE_SR_NO||'</strong></p>
+</td>
+<td valign="top" width="24%">
+<p><strong>'||M.ACE_PARTICULARS||'</strong></p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||M.ACE_LFY_BUDGET||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||M.ACE_LFY_UTILISATION||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||M.ACE_LFY_VARIANCE||'</p>
+</td>
+<td valign="top" width="9%">
+<p align="center">'||M.ACE_LFY_UTILISED||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||M.PS_ACE_LFY_BUDGET||'</p></td>
+<td valign="top" width="12%">
+<p align="center">'||M.PS_ACE_LFY_UTILISATION||'</p></td>
+</tr>';
+
+
+
+Drt_6:= Drt_6 || Drt_6_1;
+Drt_6_1:=' ';
+
+DRT_BS := DRT_BS + nvl(M.ACE_LFY_BUDGET,0);
+drt_util:= drt_util + nvl(M.ACE_LFY_UTILISATION,0);
+drt_vari := drt_vari + nvl(M.ACE_LFY_VARIANCE,0);
+DRT_PER_UTIL := DRT_PER_UTIL + nvl(M.ACE_LFY_UTILISED,0);
+PS_DRT_BS := PS_DRT_BS + nvl(M.PS_ACE_LFY_BUDGET,0);
+PS_DRT_PER_UTIL := PS_DRT_PER_UTIL + nvl(M.PS_ACE_LFY_UTILISATION,0);
+
+
+
+
+
+END LOOP;
+
+DRT_6_2 :='<tr>
+<td valign="top" width="7%">
+<p><strong></strong></p>
+</td>
+<td valign="top" width="24%">
+<p><strong>Total</strong></p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||DRT_BS||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||drt_util||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||drt_vari||'</p>
+</td>
+<td valign="top" width="9%">
+<p align="center">'||DRT_PER_UTIL||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||PS_DRT_BS||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||PS_DRT_PER_UTIL||'</p>
+</td>
+</tr>';
+
+
+
+Drt_6 := Drt_6 || Drt_6_2;
+
+FOR M IN (select case when a.ACE_SR_NO = 12 then 8 else a.ACE_SR_NO end as  ACE_SR_NO,ACE_PARTICULARS,ACE_LFY_BUDGET,ace_lfy_utilisation,ACE_LFY_VARIANCE,ACE_LFY_UTILISED,
+(select ACE_LFY_BUDGET from MS_BOB_REG_BRANCH_PROF_ACE where AUDIT_ID=P_aud_id and ACE_SR_NO=a.ACE_SR_NO) as ps_ACE_LFY_BUDGET,
+(select ace_lfy_utilisation from MS_BOB_REG_BRANCH_PROF_ACE where AUDIT_ID=P_aud_id and ACE_SR_NO=a.ACE_SR_NO) as ps_ace_lfy_utilisation
+from MS_BOB_REG_BRANCH_PROF_ACE a where AUDIT_ID=P_PRV_AUD_ID and ACE_SR_NO =12 order by ACE_SR_NO) LOOP
+
+
+
+DRT_6_1 := '<tr>
+<td valign="top" width="7%">
+<p><strong>'||M.ACE_SR_NO||'</strong></p>
+</td>
+<td valign="top" width="24%">
+<p><strong>'||M.ACE_PARTICULARS||'</strong></p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||M.ACE_LFY_BUDGET||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||M.ACE_LFY_UTILISATION||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||M.ACE_LFY_VARIANCE||'</p>
+</td>
+<td valign="top" width="9%">
+<p align="center">'||M.ACE_LFY_UTILISED||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||M.PS_ACE_LFY_BUDGET||'</p></td>
+<td valign="top" width="12%">
+<p align="center">'||M.PS_ACE_LFY_UTILISATION||'</p></td>
+</tr>';
+
+
+
+Drt_6:= Drt_6 || Drt_6_1;
+Drt_6_1:=' ';
+
+DRT_BS_2 := DRT_BS_2 + nvl(M.ACE_LFY_BUDGET,0);
+drt_util_2:= drt_util_2 + nvl(M.ACE_LFY_UTILISATION,0);
+drt_vari_2 := drt_vari_2 + nvl(M.ACE_LFY_VARIANCE,0);
+DRT_PER_UTIL_2 := DRT_PER_UTIL_2 + nvl(M.ACE_LFY_UTILISED,0);
+PS_DRT_BS_2 := PS_DRT_BS_2 + nvl(M.PS_ACE_LFY_BUDGET,0);
+PS_DRT_PER_UTIL_2 := PS_DRT_PER_UTIL_2 + nvl(M.PS_ACE_LFY_UTILISATION,0);
+
+END LOOP;
+
+DRT_BS_2 := DRT_BS_2+DRT_BS;
+drt_util_2:=drt_util_2+drt_util;
+drt_vari_2:=drt_vari_2+drt_vari;
+DRT_PER_UTIL_2:=DRT_PER_UTIL+DRT_PER_UTIL_2;
+PS_DRT_BS_2:=PS_DRT_BS_2+PS_DRT_BS;
+PS_DRT_PER_UTIL_2:=PS_DRT_PER_UTIL_2+PS_DRT_PER_UTIL;
+
+DRT_6_2 :='<tr>
+<td valign="top" width="7%">
+<p><strong></strong></p>
+</td>
+<td valign="top" width="24%">
+<p><strong> Grand Total</strong></p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||DRT_BS_2||' </p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||drt_util_2||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||drt_vari_2||'</p>
+</td>
+<td valign="top" width="9%">
+<p align="center">'||DRT_PER_UTIL_2||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||PS_DRT_BS_2||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||PS_DRT_PER_UTIL_2||'</p>
+</td>
+</tr>';
+
+
+
+Drt_6 := Drt_6 || Drt_6_2;
+
+
+
+
+DRT_7 := DRT_5 ||DRT_6 || '</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Observations: '||lv_ce_obs||'</p>
+
+
+<p align="right"><strong>(Amt. in Rs. Lakh)</strong></p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="4" valign="top" width="612">
+<strong> D.  Capital Expenditure (Refurbishment):</strong>
+
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="190">
+<p align="center"><strong>Details</strong></p>
+</td>
+<td valign="top" width="141">
+<p align="center"><strong>Amount</strong></p>
+<p align="center"><strong>Authorized</strong></p>
+</td>
+<td valign="top" width="141">
+<p align="center"><strong>Actual Amount (L-1)</strong></p>
+</td>
+<td valign="top" width="141">
+<p align="center"><strong>Amount Released</strong></p>
+<p align="center"><strong>(Part / Full Payment made )</strong></p>
+</td>
+</tr>';
+
+FOR M IN ( SELECT CER_DETAILS, CER_AMOUNT_AUTH, CER_ACTUAL_AMOUNT, CER_AMOUNT_RELE FROM ms_bob_reg_branch_prof_CER
+WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+lv_amt_1 := lv_amt_1 + nvl (M.CER_AMOUNT_AUTH,0);
+lv_amt_2 := lv_amt_2 + nvl (M.CER_ACTUAL_AMOUNT,0);
+lv_amt_3 := lv_amt_3 + nvl (M.CER_AMOUNT_RELE,0);
+
+if(M.CER_DETAILS !='Total')
+then
+DRT_8_1:='<tr>
+<td valign="top" width="7%">
+<p><strong>'||M.CER_DETAILS||'</strong></p>
+</td>
+<td valign="top" width="24%">
+<p>'||M.CER_AMOUNT_AUTH||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||M.CER_ACTUAL_AMOUNT||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||M.CER_AMOUNT_RELE||'</p>
+</td>
+</tr>';
+else
+DRT_8_1:='<tr>
+<td valign="top" width="7%">
+<p><strong>'||M.CER_DETAILS||'</strong></p>
+</td>
+<td valign="top" width="24%">
+<p>'||lv_amt_1||'</p>
+</td>
+<td valign="top" width="12%">
+<p align="center">'||lv_amt_2||'</p>
+</td>
+<td valign="top" width="10%">
+<p align="center">'||lv_amt_3||'</p>
+</td>
+</tr>';
+end if;
+
+
+Drt_8:= Drt_8 || Drt_8_1;
+
+Drt_8_1:=' ';
+END LOOP;
+
+
+
+Drt_9:= Drt_7 || Drt_8 || '</tbody>
+</table>';
+
+
+
+DRT_11:= DRT_9 ||'
+<p><span style="text-decoration: underline;">&nbsp;</span></p>
+<p align="right"><strong>(Amt. in Rs. Lakh)</strong></p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="2" valign="top" width="100%"><ol>
+<P><strong>E.Premises and Equipment Department</strong></P>
+</ol>
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="33%">
+<p>Functions</p>
+</td>
+<td valign="top" width="66%">
+<ul>
+<li>Acquiring new premises for branch &amp; ATMs.</li>
+<li>Reviewal of existing prmises lease for Branch premises &amp; for ATMs.</li>
+<li>Allocation of capital expenditure to the branches</li>
+<li>Refurbishment of branches</li>
+<li>Provision of required infrastructure to branches on need base.</li>
+<li>Providing infrastuctur for E-Lobbies.</li>
+<li>Provision of required infrastructure to branches on need base.</li>
+<li>Maintaining AMC for lift,AC etc (If applicable)</li>
+<li>Any Other activities '||lv_any_other||'</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top" width="33%">
+<p>Structure</p>
+</td>
+<td valign="top" width="66%">
+<p>'||LV_PED_COMMENTS||'</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="33%">
+<p>Highlights</p>
+</td>
+<td valign="top" width="66%">
+<p>'||high_PED_PARTICULARS||'</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span style="text-decoration: underline;">&nbsp;</span></p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="6" nowrap="nowrap" width="100%"><ol>
+<P><strong>F. Details of other Capital expenditure</strong></P>
+</ol></td>
+</tr>
+<tr>
+<td nowrap="nowrap" width="9%">&nbsp;</td>
+<td nowrap="nowrap" width="15%">&nbsp;</td>
+<td nowrap="nowrap" width="22%">
+<p align="center">REFURBISHMENT</p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p><strong><em>&nbsp;</em></strong></p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p><strong><em>&nbsp;</em></strong></p>
+</td>
+<td nowrap="nowrap" width="27%">&nbsp;</td>
+</tr>
+<tr>
+<td width="9%">
+<p align="center">SR.NO</p>
+</td>
+<td width="15%">
+<p>Branch/ Region</p>
+</td>
+<td width="22%">
+<p align="center">Name of vendor</p>
+</td>
+<td width="12%">
+<p align="center">Amt.Paid</p>
+<p align="center">(amt. lakhs)</p>
+</td>
+<td width="12%">
+<p align="center">Date of payment</p>
+</td>
+<td width="27%">
+<p align="center">REMARKS</p>
+</td>
+</tr>';
+
+FOR M IN ( SELECT DCR_SERIAL_NO, case when DCR_BRANCH_REGION=1 then 'LOV' when DCR_BRANCH_REGION=2 THEN 'Branch' else 'Region' END Rk, DCR_NAME_VENDOR, DCR_AMT_PAID, DCR_DATE_PAYMENT, DCR_REMARKS FROM 
+ms_bob_reg_branch_prof_DCR WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+DRT_12_1:= '<tr>
+<td nowrap="nowrap" width="9%">
+<p align="center">'||M.DCR_SERIAL_NO||'</p>
+</td>
+<td nowrap="nowrap" width="15%">
+<p>'||M.RK||'</p>
+</td>
+<td width="22%">
+<p>'||M.DCR_NAME_VENDOR||'</p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p>'||M.DCR_AMT_PAID||'</p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p align="right">'||M.DCR_DATE_PAYMENT||'</p>
+</td>
+<td nowrap="nowrap" width="27%">
+<p>'||M.DCR_REMARKS||'</p>
+</td>
+</tr>';
+begin
+select sum(DCR_AMT_PAID) into lv_DCR_AMT_PAID from ms_bob_reg_branch_prof_DCR WHERE AUDIT_ID =p_aud_id;
+exception
+when others then
+lv_DCR_AMT_PAID:=null;
+end;
+Drt_013:='<tr>
+<td nowrap="nowrap" width="9%">
+<p align="center"></p>
+</td>
+<td nowrap="nowrap" width="15%">
+<p></p>
+</td>
+<td width="22%">
+<p>Total</p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p>'||lv_DCR_AMT_PAID||'</p>
+</td>
+<td nowrap="nowrap" width="12%">
+<p align="right"></p>
+</td>
+<td nowrap="nowrap" width="27%">
+<p></p>
+</td>
+</tr>';
+
+
+Drt_12:= Drt_12 || Drt_12_1;
+DRT_12_1:=' ';
+
+END LOOP;
+
+Drt_13:= Drt_11 || Drt_12||Drt_013 ||'</tbody>
+</table>';
+
+
+
+
+DRT_15:= DRT_13 ||'
+<p>&nbsp;</p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="5" nowrap="nowrap" width="93%"><ol>
+<P><strong>A. Details of Security Budget </strong></P>
+</ol></td>
+</tr>
+<tr>
+<td nowrap="nowrap" width="9%">
+<p align="center">Sr.No.</p>
+</td>
+<td nowrap="nowrap" width="26%">
+<p align="center">Branch/ Region</p>
+</td>
+<td nowrap="nowrap" width="27%">
+<p align="center">Items</p>
+</td>
+<td nowrap="nowrap" width="15%">
+<p align="center">Amount</p>
+<p align="center">(Rs.in Lakh)</p>
+</td>
+<td width="15%">
+<p align="center">Vendor</p>
+</td>
+</tr>';
+
+FOR M IN (SELECT DSB_SERIAL_NO, case when DSB_BRANCH_REGION=1 then 'LOV' when DSB_BRANCH_REGION=2 THEN 'Branch' else 'Region'  END Rk, DSB_ITEMS, DSB_AMOUNT, DSB_VENDOR  FROM ms_bob_reg_branch_prof_DSB WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+DRT_16_1:=  '<tr>
+<td nowrap="nowrap" width="9%">
+<p>'||M.DSB_SERIAL_NO||'</p>
+</td>
+<td nowrap="nowrap" width="26%">
+<p>'||M.Rk||'</p>
+</td>
+<td nowrap="nowrap" width="27%">
+<p>'||M.DSB_ITEMS||'</p>
+</td>
+<td nowrap="nowrap" width="15%">
+<p align="right">'||M.DSB_AMOUNT||'</p>
+</td>
+<td width="15%">
+<p>'||M.DSB_VENDOR||'</p>
+</td>
+</tr>';
+
+Drt_16 := Drt_16 || Drt_16_1;
+DRT_16_1:=' ';
+
+END LOOP;
+
+DRT_17 := DRT_15 || DRT_16 || '</tbody>
+</table>
+<p><strong><span style="text-decoration: underline;">&nbsp;</span></strong></p>
+<p><strong><span style="text-decoration: underline;">Observations</span></strong>: '||lv_obs_it_dep||'</p>';
+
+
+
+
+DRT_19:= DRT_17 ||'
+<p align="right"><strong>(Amount Rs.in lakhs)</strong></p> 
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="2" width="100%"><ol>
+<p><strong>B. IT Budget:</strong></p>
+</ol></td>
+</tr>
+<tr>
+<td valign="top" width="60%">
+<p><strong>Particulars</strong></p>
+</td>
+<td valign="top" width="39%">
+<p><strong>Sanctioned (Sept/ Mar )</strong></p>
+</td>
+</tr>';
+
+FOR M IN (SELECT ITB_PARTICULARS, ITB_SANCTIONED   FROM ms_bob_reg_branch_prof_ITB WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+if (M.ITB_PARTICULARS ='Budget for Last finnacial year')
+then
+
+DRT_20_1:= '<tr>
+<td valign="top" width="60%">
+<p align="left">'||M.ITB_PARTICULARS||' : '||lv_year_2||'-'||lv_year_1||'</p>
+</td>
+<td valign="top" width="39%">
+<p align="right">'||M.ITB_SANCTIONED||'</p>
+</td>
+</tr>';
+
+else 
+
+DRT_20_1:= '<tr>
+<td valign="top" width="60%">
+<p align="left">'||M.ITB_PARTICULARS||'</p>
+</td>
+<td valign="top" width="39%">
+<p align="right">'||M.ITB_SANCTIONED||'</p>
+</td>
+</tr>';
+
+end if;
+
+DRT_20:= DRT_20 || DRT_20_1;
+
+END LOOP;
+
+DRT_21:= DRT_19 || DRT_20 || '</tbody>
+</table>
+<p>&nbsp;</p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="6" nowrap="nowrap" width="100%">
+<p align="left"><strong>Details of IT Budget Utilisation upto Sept/ Mar </strong></p>
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" width="12%">
+<p align="center"><strong>SL NO</strong></p>
+</td>
+<td width="14%">
+<p align="center"><strong>Branch/ Region</strong></p>
+</td>
+<td width="26%">
+<p><strong>Details</strong></p>
+</td>
+<td nowrap="nowrap" width="14%">
+<p align="center"><strong>Amount </strong></p>
+</td>
+<td nowrap="nowrap" width="14%">
+<p align="center"><strong>Date</strong></p>
+</td>
+<td nowrap="nowrap" width="16%">
+<p align="center"><strong>Vendor</strong></p>
+</td>
+</tr>';
+
+FOR M IN ( SELECT DIT_SERIAL_NO, case when DIT_BRANCH_REGION='2' then 'Branch' else 'Region'end Rk , 
+DIT_DETAILS, DIT_AMOUNT, DIT_DATE, DIT_VENDOR   FROM ms_bob_reg_branch_prof_DIT WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+DRT_22_1:='<tr>
+<td valign="bottom" nowrap="nowrap" width="12%">
+<p align="center">'||M.DIT_SERIAL_NO||'</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center">'||M.Rk||'</p>
+</td>
+<td valign="bottom" width="26%">
+<p>'||M.DIT_DETAILS||'</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center">'||M.DIT_AMOUNT||'</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center">'||M.DIT_DATE||'</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="16%">
+<p align="center">'||M.DIT_VENDOR||'</p>
+</td>
+</tr>';
+
+Drt_22:= Drt_22 || Drt_22_1;
+Drt_22_1:=' ';
+
+End Loop;
+Begin
+ Select Sum( Dit_Amount ) Into Ln_Dit_Amount
+From Ms_Bob_Reg_Branch_Prof_Dit Where Audit_Id = P_Aud_Id;
+Exception
+When Others
+Then
+Ln_Dit_Amount:='';
+End;
+
+lv_st08:='<tr>
+<td valign="bottom" nowrap="nowrap" width="12%">
+<p align="center"></p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center"></p>
+</td>
+<td valign="bottom" width="26%">
+<p>Total</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center">'||Ln_Dit_Amount||'</p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="14%">
+<p align="center"></p>
+</td>
+<td valign="bottom" nowrap="nowrap" width="16%">
+<p align="center"></p>
+</td>
+</tr>';
+
+DRT_23:= DRT_21 || DRT_22 || '</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">Observations: </span></strong>'||lv_obs_itb||'</p>';
+
+DRT_25:= DRT_23 ||'
+
+<p align="right"><strong> (Amt. in Rs. Lakh)</strong></p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="6" width="100%"><ol>
+<P><strong>C. Details of Zonal/ Regional Sanctions:</strong></P>
+</ol></td>
+</tr>
+<tr>
+<td width="7%">
+<p>Sr. No.</p>
+</td>
+<td width="21%">
+<p>Sanction No.</p>
+</td>
+<td width="19%">
+<p>Date of Sanction</p>
+</td>
+<td width="20%">
+<p>Particulars</p>
+</td>
+<td width="14%">
+<p align="center">Spent Head</p>
+</td>
+<td width="17%">
+<p>Amount Sanctioned (Rs.)</p>
+</td>
+</tr>';
+
+FOR M IN ( SELECT DOZ_SERIAL_NO, DOZ_SANCTION_NO, DOZ_DATE_SANCTION, DOZ_PARTICULARS, DOZ_SPENT_HEAD, DOZ_AMOUNT_SANCTIONED  FROM ms_bob_reg_branch_prof_DOZ WHERE AUDIT_ID = P_AUD_ID
+) LOOP
+
+DRT_26_1:= '<tr>
+<td width="7%">
+<p>'||M.DOZ_SERIAL_NO||'</p>
+</td>
+<td width="21%">
+<p>'||M.DOZ_SANCTION_NO||'</p>
+</td>
+<td width="19%">
+<p>'||M.DOZ_DATE_SANCTION||'</p>
+</td>
+<td width="20%">
+<p>'||M.DOZ_PARTICULARS||'</p>
+</td>
+<td width="14%">
+<p align="center">'||M.DOZ_SPENT_HEAD||'</p>
+</td>
+<td width="17%">
+<p align="center">'||M.DOZ_AMOUNT_SANCTIONED||'</p>
+</td>
+</tr>';
+
+Drt_26:= Drt_26 || Drt_26_1;
+
+Drt_26_1:='';
+END LOOP;
+
+begin
+SELECT sum( DOZ_AMOUNT_SANCTIONED) into lv_DOZ_AMOUNT_SANCTIONED  FROM ms_bob_reg_branch_prof_DOZ where audit_id=p_aud_id;
+exception
+when others then
+lv_DOZ_AMOUNT_SANCTIONED:=null;
+end;
+Drt_026:='<tr>
+<td width="7%">
+<p></p>
+</td>
+<td width="21%">
+<p>Total</p>
+</td>
+<td width="19%">
+<p></p>
+</td>
+<td width="20%">
+<p></p>
+</td>
+<td width="14%">
+<p align="center"></p>
+</td>
+<td width="17%">
+<p align="center">'||lv_DOZ_AMOUNT_SANCTIONED||'</p>
+</td>
+</tr>';
+
+begin
+SELECT observations_details_zr into lv_observations_details_zr
+ FROM ms_bob_reg_branch_prof where audit_id = p_aud_id;
+ exception
+ when others then
+ lv_observations_details_zr:=null;
+ end;
+ 
+
+DRT_27 := DRT_25 || DRT_26||DRT_026 || '</tbody>
+</table>
+<p><strong>Observations: </strong>'||lv_observations_details_zr||'</p>
+<p><strong><span style="text-decoration: underline;text_align:center;">REVENUE EXPENDITURE</span></strong></p>
+
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="5" width="616"><ol>
+<p><strong>D. Comparison of actual expenses for the last two financial year: </strong></p>
+</ol></td>
+</tr>
+<tr>
+<td valign="top" width="44">
+<p>Sr. No.</p>
+</td>
+<td width="253">
+<p>Admin/Expenses of Region </p>
+</td>
+<td valign="top" width="103">
+<p align="center"> '||lv_year_3||'-'||lv_year_2||'</p>
+<p></p>
+</td>
+<td valign="top" width="111">
+<p align="center">'||lv_year_2||'-'||lv_year_1||'</p>
+<p></p>
+</td>
+<td valign="top" width="105">
+<p>Deviation %</p>
+</td>
+</tr>';
+
+FOR M IN ( SELECT CAE_SERIAL_NO,CAE_ADMN_EXPENSES,
+(SELECT CAE_CURRENT_FIN FROM ms_bob_reg_branch_prof_CAE where AUDIT_ID = P_PRE_PREV_AUD_ID and CAE_SERIAL_NO=a.CAE_SERIAL_NO) as Prev_to_prev_fin,
+(SELECT CAE_CURRENT_FIN FROM ms_bob_reg_branch_prof_CAE where AUDIT_ID =P_PRV_AUD_ID and CAE_SERIAL_NO=a.CAE_SERIAL_NO) as Prev_fin,
+ CAE_CURRENT_FIN FROM ms_bob_reg_branch_prof_CAE a where AUDIT_ID =P_AUD_ID order by CAE_SERIAL_NO) LOOP
+
+DRT_28_1:='<tr>
+<td valign="top" width="44">
+<p align="left">'||M.CAE_SERIAL_NO||'</p>
+</td>
+<td width="253">
+<P align="left">'||M.CAE_ADMN_EXPENSES||'</P>
+</td>
+<td width="103">
+<p align="center">'||M.PREV_FIN||'</p>
+</td>
+<td valign="top" width="111">
+<p align="center">'||M.CAE_CURRENT_FIN||'</p>
+</td>
+<td width="105">
+<p align="center">'||round((M.CAE_CURRENT_FIN/M.PREV_FIN)/100,4)||'</p>
+</td>
+</tr>';
+
+Drt_28:= Drt_28 || Drt_28_1; 
+Drt_28_1:=' ';
+
+END LOOP;
+
+begin 
+select observations_comparison  into lv_observations_comparison from ms_bob_reg_branch_prof where audit_id=p_aud_id;
+exception
+when others then
+lv_observations_comparison:=null;
+end;
+
+DRT_29:= DRT_27 || DRT_28 || '</tbody>
+</table>
+<p>Observations: '||lv_observations_comparison||'</p>
+<p>&nbsp;</p>
+
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td colspan="4" width="100%"><ol>
+<p><strong>E. Random verification of PL vouchers of 6 months:</strong></p>
+</ol></td>
+</tr>
+<tr>
+<td valign="top" width="18%">
+<p><strong>Date</strong></p>
+</td>
+<td valign="top" width="21%">
+<p><strong>Nature</strong></p>
+</td>
+<td valign="top" width="36%">
+<p><strong>Description</strong></p>
+</td>
+<td valign="top" width="23%">
+<p><strong>Amount</strong></p>
+</td>
+</tr>';
+
+FOR  M IN ( select RVP_DATE, RVP_NATURE, RVP_DESCRIPTION, RVP_AMOUNT  from ms_bob_reg_branch_prof_RVP where audit_id = p_aud_id
+ ) LOOP
+
+DRT_30_1 := '<tr>
+<td valign="top" width="18%">
+<p>'||M.RVP_DATE||'</p>
+</td>
+<td valign="top" width="21%">
+<p>'||M.RVP_NATURE||'</p>
+</td>
+<td valign="top" width="36%">
+<p>'||M.RVP_DESCRIPTION||'</p>
+</td>
+<td valign="top" width="23%">
+<p>'||M.RVP_AMOUNT||'</p>
+</td>
+</tr>';
+
+DRT_30 :=DRT_30 || DRT_30_1; 
+
+END LOOP;
+
+BEGIN
+SELECT observation_random_pl INTO LV_observation_random_pl  FROM ms_bob_reg_branch_prof WHERE AUDIT_ID=P_AUD_ID;
+EXCEPTION
+WHEN OTHERS THEN
+LV_observation_random_pl:=NULL;
+END;
+
+DRT_31:= DRT_29 || DRT_30 || '</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong>Observations: </strong>'||LV_observation_random_pl||'</p>
+<p>&nbsp;</p>
+
+<P> A. Comments on Submission of Controllable expenses statement '||lv_comm||' </P>
+
+<br/><P>B. Status of reconciliation of Regional Office/ Zonal Office a/c with Base Branch: '||lv_sor||' </P>
+
+<br/><P>C. Any Other observations: '||lv_aoo||' </P>
+
+<p>&nbsp;</p>
+<table style="width: 720pt; border-collapse:collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="205">
+<p>'||lv_team_members||'</p>
+</td>
+<td valign="top" width="205">
+<p>'||lv_deputy_head||'</p>
+</td>
+<td valign="top" width="205">
+<p>'||lv_regional_head||'</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="205">
+<p>'||assisted_by||'</p>
+
+</td>
+<td valign="top" width="205">
+<p>'||lv_deputy_head||'</p>
+</td>
+<td valign="top" width="205">
+<p>'||lv_regional_head||'</p>
+</td>
+</tr>
+
+<tr>
+<td valign="top" width="205">
+<p>ZIAD, '||lv_zon||'</p>
+</td>
+<td valign="top" width="205">
+<p>Dy. Regional Head</p>
+</td>
+<td valign="top" width="205">
+<p>Regional Head</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Place: '||lv_zon||' <br>
+Date: '||lv_f_end_date||'</p>
+<p>&nbsp;</p>';
+
+lv_f_data := '<p style="text-align:center;"><img src="D:\MetricStream\SYSTEMi\Systemi\Resource\Html\bob1.png"></img></p>' || 
+             lv_st1 || lv_st2 || lv_st3 || lv_st4 ||DRT_31;
+
+RETURN lv_f_data;
+  END MS_BOB_EXP_REGION_FN;
+  
+  function MS_BOB_EXP_REGION_FN_1(P_AUD_ID VARCHAR2,
+P_PRV_AUD_ID VARCHAR2,
+P_PRE_PREV_AUD_ID VARCHAR2,
+p_SOL_ID VARCHAR2,
+P_ORG_ID VARCHAR2)
+
+       RETURN CLOB AS
+       
+       lv_var1 clob;
+       lv_var2 clob;
+       
+       begin
+       
+       
+        begin
+               lv_var1 := MS_BOB_EXP_REGION_FN(P_AUD_ID, P_PRV_AUD_ID, P_PRE_PREV_AUD_ID, p_SOL_ID, P_ORG_ID);
+EXCEPTION
+WHEN OTHERS THEN
+            si_db_logger.log(
+                p_log_level   => 'E',
+                p_module      => 'BOB',
+                p_text        => 'Error occurred in MS_BOB_EXP_REGION_RPT_PKG.MS_BOB_EXP_REGION_FN' || sqlerrm );
+end;
+
+       lv_var2 := lv_var1;
+       
+       return lv_var2;
+       
+       
+       end MS_BOB_EXP_REGION_FN_1;
+
+END MS_BOB_EXP_REGION_RPT_PKG; 

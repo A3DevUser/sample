@@ -1,0 +1,397 @@
+Camp Account Controller
+
+package com.pwt.upload.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.pwt.upload.model.CampAccData;
+import com.pwt.upload.model.SchemeData;
+import com.pwt.upload.model.UniAccData;
+import com.pwt.upload.repository.CampAccRepository;
+
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("api/")
+public class CampAccController {
+	
+	@Autowired
+	private CampAccRepository campAccRepository;
+	
+	@GetMapping ("FetchCampData")
+	public List<CampAccData> getCampData() {
+		return this.campAccRepository.findAll();
+	}
+	
+	@GetMapping("campAccbysolandportfolio")
+	public List<CampAccData> getCampAccountBySolAndPortfolio(@RequestParam String solId, @RequestParam String portfolioId) {
+	    
+		List<CampAccData> op = campAccRepository.getCampAccountsByPortfolioAndSolId(solId, portfolioId);
+		return op;
+	  }
+	
+//	@GetMapping("getUniAccountsByIds")
+//	public List<CampAccData> getCampAccountById(@RequestParam List<String> accountId) {
+//
+//	    return campAccRepository.findAllById(accountId);
+//	  }
+	
+	@GetMapping("campAccbysolid")
+	public List<CampAccData> getCampAccountBySol(@RequestParam String solId) {
+	    
+		List<CampAccData> op = campAccRepository.findBySolId(solId);
+
+	    return op;
+	  }
+	
+	@GetMapping("CampschemeBySol")
+	public List<SchemeData> getUniSchemeBySol(@RequestParam String solId) {
+	    
+	    List<Object[]> list = campAccRepository.getCampAccSchemeBySol(solId);
+	    	    List<SchemeData> out = new ArrayList<>();
+	            if (list != null && !list.isEmpty()) {
+	                SchemeData schemeData = null;
+	                for (Object[] object : list) {
+	                	schemeData = new SchemeData();
+	                	schemeData.setSchemeName(object[0].toString());
+	                   
+	                    out.add(schemeData);
+	                }
+	            }
+	            
+	            return out;
+	  }
+	
+	
+
+}
+
+
+---------------------------------------------------------------------------------------------
+
+Camp Account Model
+
+package com.pwt.upload.model;
+
+import java.sql.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table (name = "AAA_CAMP_ACC")
+public class CampAccData {
+	
+	@Id
+	@Column(name = "REGISTRATION_NO")
+	private String registrationNo;
+	
+	@Column (name = "NAME_OF_APPLICANT")
+	private String nameOfApplocant;
+	
+	@Column (name = "LIMIT_SANCTIONED")
+	private String limitSanctioned;
+	
+	@Column (name = "DATE_OF_SANCTION")
+	private String dateOfSanction;
+	
+	@Column (name = "SANCTIONING_AUTHORITY")
+	private String sanctioningAutority;
+	
+	@Column (name = "DESIGNATION")
+	private String designation;
+	
+	@Column (name = "POSTION")
+	private String position;
+	
+	@Column (name = "NAME_OF_PARKING_BRANCH")
+	private String nameOfParkingBranch;
+	
+	@Column (name = "SOL_ID")
+	private String solId;
+	
+	@Column (name = "REGION")
+	private String region;
+	
+	@Column (name = "ZONE")
+	private String zone;
+	
+	@Column (name = "DEVIATION")
+	private String deviation;
+	
+	@Column (name = "PRODUCT")
+	private String product;
+	
+	@Column (name = "SCHEME_CODE")
+	private String schemeCode;
+	
+	@Column (name = "PURPOSE")
+	private String purpose;
+	
+	@Column (name = "DATE_OF_INSPECTION")
+	private String dateOfInspection;
+	
+	@Column (name = "DATE_OF_VALUATION")
+	private String dateOfValuation;
+	
+	@Column (name = "IN_PRINCIPAL_SANCTION")
+	private String inPrincipalSanction;
+	
+	@Column (name = "CAMP_ZONE")
+	private String campZone;
+	
+	@Column (name = "BUSS_DATE")
+	private Date bussDate;
+	
+	@Column (name = "SAMPLED")
+	private String sampled;
+
+	public String getRegistrationNo() {
+		return registrationNo;
+	}
+
+	public void setRegistrationNo(String registrationNo) {
+		this.registrationNo = registrationNo;
+	}
+
+	public String getNameOfApplocant() {
+		return nameOfApplocant;
+	}
+
+	public void setNameOfApplocant(String nameOfApplocant) {
+		this.nameOfApplocant = nameOfApplocant;
+	}
+
+	public String getLimitSanctioned() {
+		return limitSanctioned;
+	}
+
+	public void setLimitSanctioned(String limitSanctioned) {
+		this.limitSanctioned = limitSanctioned;
+	}
+
+	public String getDateOfSanction() {
+		return dateOfSanction;
+	}
+
+	public void setDateOfSanction(String dateOfSanction) {
+		this.dateOfSanction = dateOfSanction;
+	}
+
+	public String getSanctioningAutority() {
+		return sanctioningAutority;
+	}
+
+	public void setSanctioningAutority(String sanctioningAutority) {
+		this.sanctioningAutority = sanctioningAutority;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getNameOfParkingBranch() {
+		return nameOfParkingBranch;
+	}
+
+	public void setNameOfParkingBranch(String nameOfParkingBranch) {
+		this.nameOfParkingBranch = nameOfParkingBranch;
+	}
+
+	public String getSolId() {
+		return solId;
+	}
+
+	public void setSolId(String solId) {
+		this.solId = solId;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	public String getDeviation() {
+		return deviation;
+	}
+
+	public void setDeviation(String deviation) {
+		this.deviation = deviation;
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	public String getSchemeCode() {
+		return schemeCode;
+	}
+
+	public void setSchemeCode(String schemeCode) {
+		this.schemeCode = schemeCode;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getDateOfInspection() {
+		return dateOfInspection;
+	}
+
+	public void setDateOfInspection(String dateOfInspection) {
+		this.dateOfInspection = dateOfInspection;
+	}
+
+	public String getDateOfValuation() {
+		return dateOfValuation;
+	}
+
+	public void setDateOfValuation(String dateOfValuation) {
+		this.dateOfValuation = dateOfValuation;
+	}
+
+	public String getInPrincipalSanction() {
+		return inPrincipalSanction;
+	}
+
+	public void setInPrincipalSanction(String inPrincipalSanction) {
+		this.inPrincipalSanction = inPrincipalSanction;
+	}
+
+	public String getCampZone() {
+		return campZone;
+	}
+
+	public void setCampZone(String campZone) {
+		this.campZone = campZone;
+	}
+
+	public Date getBussDate() {
+		return bussDate;
+	}
+
+	public void setBussDate(Date bussDate) {
+		this.bussDate = bussDate;
+	}
+
+	public String getSampled() {
+		return sampled;
+	}
+
+	public void setSampled(String sampled) {
+		this.sampled = sampled;
+	}
+
+	public CampAccData(String registrationNo, String nameOfApplocant, String limitSanctioned, String dateOfSanction,
+			String sanctioningAutority, String designation, String position, String nameOfParkingBranch, String solId,
+			String region, String zone, String deviation, String product, String schemeCode, String purpose,
+			String dateOfInspection, String dateOfValuation, String inPrincipalSanction, String campZone, Date bussDate,
+			String sampled) {
+		super();
+		this.registrationNo = registrationNo;
+		this.nameOfApplocant = nameOfApplocant;
+		this.limitSanctioned = limitSanctioned;
+		this.dateOfSanction = dateOfSanction;
+		this.sanctioningAutority = sanctioningAutority;
+		this.designation = designation;
+		this.position = position;
+		this.nameOfParkingBranch = nameOfParkingBranch;
+		this.solId = solId;
+		this.region = region;
+		this.zone = zone;
+		this.deviation = deviation;
+		this.product = product;
+		this.schemeCode = schemeCode;
+		this.purpose = purpose;
+		this.dateOfInspection = dateOfInspection;
+		this.dateOfValuation = dateOfValuation;
+		this.inPrincipalSanction = inPrincipalSanction;
+		this.campZone = campZone;
+		this.bussDate = bussDate;
+		this.sampled = sampled;
+	}
+
+	public CampAccData() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+	
+
+}
+
+------------------------------------------------------------------------
+
+Camp Account Repository
+
+package com.pwt.upload.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.pwt.upload.model.CampAccData;
+import com.pwt.upload.model.UniAccData;
+
+public interface CampAccRepository extends JpaRepository<CampAccData, String> {
+
+	
+	@Query(value = "select * from AAA_CAMP_ACC where SCHEME_CODE in(\r\n" + 
+			"select Name from AAA_TESTTEMPLATESCHEME_CODE where Portfolio = :portfolioId) and sol_id = :solId" , nativeQuery = true)
+	List<CampAccData> getCampAccountsByPortfolioAndSolId(@Param("solId") String  solId, @Param("portfolioId") String portfolioId);
+
+
+	@Query(value = "select distinct Portfolio from AAA_TESTTEMPLATESCHEME_CODE where name in(select SCHEME_CODE from AAA_CAMP_ACC where sol_id = :solId)\r\n" + 
+			"", nativeQuery = true)
+	List<Object[]> getCampAccSchemeBySol(@Param("solId") String  solId);
+
+
+	List<CampAccData> findBySolId(String solId);
+
+
+}
